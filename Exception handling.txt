@@ -1,0 +1,41 @@
+import java.util.Scanner;
+
+public class ExceptionHandlingDemo {
+
+    public static void validateNumber(int number) throws IllegalArgumentException {
+        if (number < 0) {
+            throw new IllegalArgumentException("Number must be non-negative.");
+        } else {
+            System.out.println(" Valid number: " + number);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print(" How many numbers do you want to check? ");
+        int count = scanner.nextInt();
+
+        for (int i = 0; i < count; i++) {
+            try {
+                System.out.print("Enter number " + (i + 1) + ": ");
+                int num = scanner.nextInt();
+
+                validateNumber(num);
+
+            } catch (IllegalArgumentException e) {
+                System.out.println(" Caught exception: " + e.getMessage());
+
+            } catch (Exception e) {
+                System.out.println(" Unexpected error: " + e.getMessage());
+
+            } finally {
+                System.out.println(" Finished checking this number.");
+                System.out.println("-----------------------------");
+            }
+        }
+
+        scanner.close();
+        System.out.println(" All inputs processed.");
+    }
+}

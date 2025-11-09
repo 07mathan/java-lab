@@ -1,0 +1,124 @@
+package myfirst;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+// Base class for all shapes
+abstract class Shape {
+    Color color;
+    public Shape(Color color) {
+        this.color = color;
+    }
+    public abstract void draw(Graphics g, int centerX);
+}
+
+// Rectangle shape
+class RectangleShape extends Shape {
+    int width, height;
+    public RectangleShape(Color color, int width, int height) {
+        super(color);
+        this.width = width;
+        this.height = height;
+    }
+    public void draw(Graphics g, int centerX) {
+        int x = centerX - width / 2;
+        g.setColor(color);
+        g.fillRect(x, 0, width, height);
+        g.setColor(Color.BLACK);
+        g.drawRect(x, 0, width, height);
+    }
+}
+// Square shape
+class SquareShape extends RectangleShape {
+    public SquareShape(Color color, int size) {
+        super(color, size, size);
+    }
+}
+
+// Oval shape
+class OvalShape extends Shape {
+    int width, height;
+    public OvalShape(Color color, int width, int height) {
+        super(color);
+        this.width = width;
+        this.height = height;
+    }
+    public void draw(Graphics g, int centerX) {
+        int x = centerX - width / 2;
+        g.setColor(color);
+        g.fillOval(x, 0, width, height);
+        g.setColor(Color.BLACK);
+        g.drawOval(x, 0, width, height);
+    }
+}
+// Regular polygon shape (triangle, pentagon, hexagon, etc.)
+class PolygonShape extends Shape {
+    int sides;
+    int radius;
+
+    public PolygonShape(Color color, int sides, int radius) {
+        super(color);
+        this.sides = sides;
+        this.radius = radius;
+    }
+
+    public void draw(Graphics g, int centerX) {
+        int[] xPoints = new int[sides];
+        int[] yPoints = new int[sides];
+        double angleStep = 2 * Math.PI / sides;
+
+        for (int i = 0; i < sides; i++) {
+            double angle = i * angleStep - Math.PI / 2; // Start from top
+            xPoints[i] = centerX + (int)(radius * Math.cos(angle));
+            yPoints[i] = radius + (int)(radius * Math.sin(angle));
+        }
+
+        g.setColor(color);
+        g.fillPolygon(xPoints, yPoints, sides);
+        g.setColor(Color.BLACK);
+        g.drawPolygon(xPoints, yPoints, sides);
+    }
+}
+// Canvas to draw shapes
+class ShapeCanvas extends Canvas {
+    List<Shape> shapes = new ArrayList<>();
+
+    public ShapeCanvas() {
+        setBackground(Color.WHITE);
+        shapes.add(new RectangleShape(Color.BLUE, 100, 60));
+        shapes.add(new SquareShape(Color.CYAN, 60));
+        shapes.add(new OvalShape(Color.RED, 100, 60));
+        shapes.add(new OvalShape(Color.GREEN, 60, 60));
+        shapes.add(new PolygonShape(Color.ORANGE, 3, 40));  // Triangle
+        shapes.add(new PolygonShape(Color.MAGENTA, 5, 40)); // Pentagon
+    }
+
+    public void paint(Graphics g) {
+        int centerX = getWidth() / 2;
+        int y = 30;
+        for (Shape shape : shapes) {
+            g.translate(0, y);
+            shape.draw(g, centerX);
+            g.translate(0, -y);
+            y += 80;
+        }
+    }
+}
+// Main AWT Frame
+public class ShapesApplet extends Frame {
+    public ShapesApplet() {
+        setTitle("Centered Shapes with Polygon");
+        setSize(500, 600);
+        setLocationRelativeTo(null);
+        add(new ShapeCanvas());
+        setVisible(true);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                dispose();
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        new ShapesApplet();
+    }
+}

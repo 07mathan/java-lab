@@ -1,0 +1,53 @@
+package myfirst;
+import java.sql.*;
+
+public class sql {
+    // Database credentials
+    static final String JDBC_URL = "jdbc:mysql://localhost:3306/data1";
+    static final String USER = "root";
+    static final String PASSWORD = "";
+
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement()) {
+
+            /1️⃣ Create Table
+            String createTableSQL = "CREATE TABLE IF NOT EXISTS employees (" +
+                                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                                    "name VARCHAR(100), " +
+                                    "position VARCHAR(100), " +
+                                    "salary DOUBLE)";
+            stmt.executeUpdate(createTableSQL);
+            System.out.println("Table created successfully.");
+
+            // 2️⃣ Insert Records
+            String insertSQL = "INSERT INTO employees (name, position, salary) VALUES " +
+                               "('Alice', 'Developer', 75000), " +
+                               "('Bob', 'Manager', 85000)";
+            stmt.executeUpdate(insertSQL);
+            System.out.println("Records inserted successfully.");
+
+            // 3️⃣ Update Record
+            String updateSQL = "UPDATE employees SET salary = 90000 WHERE name = 'Bob'";
+            stmt.executeUpdate(updateSQL);
+            System.out.println("Record updated successfully.");
+
+            // 4️⃣ View Records
+            String selectSQL = "SELECT * FROM employees";
+            ResultSet rs = stmt.executeQuery(selectSQL);
+
+            System.out.println("\nEmployee Records:");
+            while (rs.next()) {
+                System.out.printf("ID: %d, Name: %s, Position: %s, Salary: %.2f%n",
+                                  rs.getInt("id"),
+                                  rs.getString("name"),
+                                  rs.getString("position"),
+                                  rs.getDouble("salary"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+

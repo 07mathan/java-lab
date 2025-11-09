@@ -1,0 +1,86 @@
+package programs;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class MouseEventSwingApp extends JFrame {
+    private String message = "Interact with the mouse";
+    private int mouseX = -1;
+    private int mouseY = -1;
+
+    public MouseEventSwingApp() {
+        setTitle("Mouse Event Handler");
+        setSize(500, 350);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setBackground(Color.WHITE);
+
+        MousePanel panel = new MousePanel();
+        add(panel);
+
+        setVisible(true);
+    }
+
+    class MousePanel extends JPanel {
+        public MousePanel() {
+            setBackground(Color.WHITE);
+            setFont(new Font("Arial", Font.BOLD, 18));
+
+            addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    message = "Mouse Clicked";
+                    updateCoordinates(e);
+                }
+
+                public void mousePressed(MouseEvent e) {
+                    message = "Mouse Pressed";
+                    updateCoordinates(e);
+                }
+
+                public void mouseReleased(MouseEvent e) {
+                    message = "Mouse Released";
+                    updateCoordinates(e);
+                }
+
+                public void mouseEntered(MouseEvent e) {
+                    message = "Mouse Entered";
+                    updateCoordinates(e);
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    message = "Mouse Exited";
+                    updateCoordinates(e);
+                }
+            });
+
+            addMouseMotionListener(new MouseMotionAdapter() {
+                public void mouseDragged(MouseEvent e) {
+                    message = "Mouse Dragged";
+                    updateCoordinates(e);
+                }
+
+                public void mouseMoved(MouseEvent e) {
+                    message = "Mouse Moved";
+                    updateCoordinates(e);
+                }
+            });
+        }
+
+        private void updateCoordinates(MouseEvent e) {
+            mouseX = e.getX();
+            mouseY = e.getY();
+            repaint();
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            String display = message + " at (" + mouseX + ", " + mouseY + ")";
+            int x = getWidth() / 2 - display.length() * 4;
+            int y = getHeight() / 2;
+            g.drawString(display, x, y);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MouseEventSwingApp());
+    }
+}

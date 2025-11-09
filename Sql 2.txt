@@ -1,0 +1,59 @@
+package myfirst;
+import java.sql.*;
+
+public class sql2 {
+    // Database credentials
+    static final String JDBC_URL = "jdbc:mysql://localhost:3306/data1";
+    static final String USER = "root";
+    static final String PASSWORD = "";
+
+    public static void main(String[] args) {
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement()) {
+
+            String createTableSQL = "CREATE TABLE IF NOT EXISTS employees (" +
+                                    "id INT PRIMARY KEY AUTO_INCREMENT, " +
+                                    "name VARCHAR(100), " +
+                                    "position VARCHAR(100), " +
+                                    "salary DOUBLE)";
+            stmt.executeUpdate(createTableSQL);
+            System.out.println("Table created successfully.");
+
+            String insertSQL = "INSERT INTO employees (name, position, salary) VALUES " +
+                               "('Alice', 'Developer', 75000), " +
+                               "('Bob', 'Manager', 85000)";
+            stmt.executeUpdate(insertSQL);
+            System.out.println("Initial records inserted successfully.");
+
+            String insertMoreSQL = "INSERT INTO employees (name, position, salary) VALUES " +
+                                   "('Abishek', 'Analyst', 60000), " +
+                                   "('Abdul', 'Designer', 62000), " +
+                                   "('Mathan', 'Tester', 58000)";
+            stmt.executeUpdate(insertMoreSQL);
+            System.out.println("Additional records inserted successfully.");
+
+            String updateSQL = "UPDATE employees SET salary = 90000 WHERE name = 'Abishek'";
+            stmt.executeUpdate(updateSQL);
+            System.out.println("Record updated successfully.");
+
+            String deleteSQL = "DELETE FROM employees WHERE name IN ('Alice', 'Bob')";
+            stmt.executeUpdate(deleteSQL);
+            System.out.println("Selected records deleted successfully.");
+
+            String selectSQL = "SELECT * FROM employees";
+            ResultSet rs = stmt.executeQuery(selectSQL);
+
+            System.out.println("\nEmployee Records:");
+            while (rs.next()) {
+                System.out.printf("ID: %d, Name: %s, Position: %s, Salary: %.2f%n",
+                                  rs.getInt("id"),
+                                  rs.getString("name"),
+                                  rs.getString("position"),
+                                  rs.getDouble("salary"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}

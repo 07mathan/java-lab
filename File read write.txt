@@ -1,0 +1,91 @@
+package myfirst;
+import java.io.*;
+import java.util.Scanner;
+
+public class file {
+
+    public static void createFile(String filename) {
+        try {
+            if (new File(filename).createNewFile()) {
+                System.out.println("File created.");
+            } else {
+                System.out.println("File already exists.");
+            }
+        } catch (IOException e) {
+            System.out.println("Error creating file.");
+        }
+    }
+
+    public static void insertContent(String filename, String content) {
+        try (FileWriter fw = new FileWriter(filename, true)) {
+            fw.write(content + System.lineSeparator());
+            System.out.println("Content inserted.");
+        } catch (IOException e) {
+            System.out.println("Error inserting content.");
+        }
+    }
+
+    public static void modifyContent(String filename, String content) {
+        try (FileWriter fw = new FileWriter(filename)) {
+            fw.write(content);
+            System.out.println("Content modified.");
+        } catch (IOException e) {
+            System.out.println("Error modifying content.");
+        }
+    }
+
+    public static void deleteContent(String filename) {
+        try (PrintWriter pw = new PrintWriter(filename)) {
+            pw.print("");
+            System.out.println("Content deleted.");
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+        }
+    }
+
+    public static void readFile(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            System.out.println("--- File Content ---");
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+            System.out.println("--------------------");
+        } catch (IOException e) {
+            System.out.println("Error reading file.");
+        }
+    }
+
+    public static void main(String [] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter filename: ");
+        String filename = sc.nextLine();
+
+        int choice;
+        do {
+            System.out.println("\nMenu: 1.Create 2.Insert 3.Modify 4.Delete 5.Read 6.Exit");
+            System.out.print("Choose: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume newline4
+
+            switch (choice) {
+                case 1 -> createFile(filename);
+                case 2 -> {
+                    System.out.print("Content to insert: ");
+                    insertContent(filename, sc.nextLine());
+                }
+                case 3 -> {
+                    System.out.print("New content: ");
+                    modifyContent(filename, sc.nextLine());
+                }
+                case 4 -> deleteContent(filename);
+                case 5 -> readFile(filename);
+                case 6 -> System.out.println("Exiting...");
+                default -> System.out.println("Invalid choice!");
+            }
+        } while (choice != 6);
+
+        sc.close();
+    }
+}

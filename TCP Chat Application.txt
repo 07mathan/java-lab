@@ -1,0 +1,58 @@
+TCP Chat Server:
+import java.io.*;
+import java.net.*;
+public class ChatServer {
+public static void main(String[] args) {
+try (ServerSocket serverSocket = new ServerSocket(6000)) {
+System.out.println("Chat server started, waiting for client...");
+Socket clientSocket = serverSocket.accept();
+System.out.println("Client connected.");
+BufferedReader in = new BufferedReader(new
+InputStreamReader(clientSocket.getInputStream()));
+PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+String msg;
+while ((msg = in.readLine()) != null) {
+System.out.println("Client: " + msg);
+out.println("Server echoes: " + msg);
+if ("bye".equalsIgnoreCase(msg)) {
+System.out.println("Client disconnected.");
+break;
+}
+}
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+}
+
+
+
+
+
+TCP Chat Client:
+import java.io.*;
+import java.net.*;
+public class ChatClient {
+public static void main(String[] args) {
+try (Socket socket = new Socket("localhost", 6000);
+BufferedReader userInput = new BufferedReader(new
+InputStreamReader(System.in));
+BufferedReader in = new BufferedReader(new
+InputStreamReader(socket.getInputStream()));
+PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+System.out.println("Connected to chat server. Type messages:");
+String msg;
+while ((msg = userInput.readLine()) != null) {
+out.println(msg);
+String response = in.readLine();
+System.out.println(response);
+if ("bye".equalsIgnoreCase(msg)) {
+System.out.println("Disconnected.");
+break;
+}
+}
+} catch (IOException e) {
+e.printStackTrace();
+}
+}
+}

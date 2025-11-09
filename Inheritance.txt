@@ -1,0 +1,80 @@
+// Base class for hierarchical inheritance
+class Student {
+    String name;
+    int rollNumber;
+
+    Student(String name, int rollNumber) {
+        this.name = name;
+        this.rollNumber = rollNumber;
+    }
+
+    void displayDetails() {
+        System.out.println("Name: " + name + ", Roll No: " + rollNumber);
+    }
+}
+
+// Subclass 1
+class EngineeringStudent extends Student {
+    String stream = "Engineering";
+
+    EngineeringStudent(String name, int rollNumber) {
+        super(name, rollNumber);
+    }
+
+    void showStream() {
+        System.out.println("Stream: " + stream);
+    }
+}
+
+// Subclass 2
+class MedicalStudent extends Student {
+    String stream = "Medical";
+
+    MedicalStudent(String name, int rollNumber) {
+        super(name, rollNumber);
+    }
+
+    void showStream() {
+        System.out.println("Stream: " + stream);
+    }
+}
+
+// Interface 1
+interface ScholarshipHolder {
+    void getScholarshipAmount();
+}
+
+// Interface 2
+interface ClubMember {
+    void clubActivity();
+}
+
+// Class implementing multiple interfaces
+class StarStudent extends EngineeringStudent implements ScholarshipHolder, ClubMember {
+    StarStudent(String name, int rollNumber) {
+        super(name, rollNumber);
+    }
+
+    public void getScholarshipAmount() {
+        System.out.println("Scholarship Amount: ₹50,000");
+    }
+
+    public void clubActivity() {
+        System.out.println("Participates in Robotics Club activities.");
+    }
+}
+
+// Main class
+public class StudentInheritanceDemo {
+    public static void main(String[] args) {
+        MedicalStudent med = new MedicalStudent("Asha", 101);
+        med.displayDetails();
+        med.showStream();
+
+        StarStudent eng = new StarStudent("Ravi", 202);
+        eng.displayDetails();
+        eng.showStream();
+        eng.getScholarshipAmount();
+        eng.clubActivity();
+    }
+}

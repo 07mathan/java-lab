@@ -1,0 +1,57 @@
+package add.src;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class CarAnimation extends JPanel {
+    
+	private static final long serialVersionUID = 1L;
+	int x = 0;
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Car body
+        g.setColor(new Color(152, 251, 152)); // Light green
+        g.fillRoundRect(x, 100, 100, 50, 20, 20); // Rounded car body
+
+        // Black hood
+        g.setColor(Color.BLACK);
+        g.fillRect(x, 100, 20, 50);
+
+        // Windows
+        g.setColor(Color.CYAN);
+        g.fillRect(x + 25, 105, 50, 20); // front window
+
+        // Wheels
+        g.setColor(Color.BLACK);
+        g.fillOval(x + 10, 140, 20, 20); // left wheel
+        g.fillOval(x + 70, 140, 20, 20); // right wheel
+
+        // Door handle
+        g.setColor(Color.DARK_GRAY);
+        g.fillRect(x + 80, 120, 5, 5);
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Car Animation");
+        CarAnimation car = new CarAnimation();
+        frame.add(car);
+        frame.setSize(800, 250);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+
+        while (true) {
+            car.x += 5;
+            if (car.x > frame.getWidth()) {
+                car.x = -100;
+            }
+            car.repaint();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

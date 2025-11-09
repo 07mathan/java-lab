@@ -1,0 +1,96 @@
+package myfirst;
+import java.util.*;
+
+public class Stackdemo {
+
+    interface Stack<T> {
+        void push(T item);
+        T pop();
+        T peek();
+        boolean isEmpty();
+    }
+
+    static class ArrayStack<T> implements Stack<T> {
+        T[] data;
+        int top = -1;
+
+        @SuppressWarnings("unchecked")
+        ArrayStack(int size) {
+            data = (T[]) new Object[size];
+        }
+
+        public void push(T item) {
+            if (top == data.length - 1) System.out.println("ArrayStack is full");
+            else data[++top] = item;
+        }
+
+        public T pop() {
+            return isEmpty() ? null : data[top--];
+        }
+
+        public T peek() {
+            return isEmpty() ? null : data[top];
+        }
+
+        public boolean isEmpty() {
+            return top == -1;
+        }
+    }
+
+    static class LinkedListStack<T> implements Stack<T> {
+        static class Node<T> {
+            T data;
+            Node<T> next;
+            Node(T d) { data = d; }
+        }
+
+        Node<T> top;
+
+        public void push(T item) {
+            Node<T> node = new Node<>(item);
+            node.next = top;
+            top = node;
+        }
+
+        public T pop() {
+            if (isEmpty()) return null;
+            T val = top.data;
+            top = top.next;
+            return val;
+        }
+
+        public T peek() {
+            return isEmpty() ? null : top.data;
+        }
+
+        public boolean isEmpty() {
+            return top == null;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Stack<String> arrayStack = new ArrayStack<>(5);
+        Stack<String> linkedStack = new LinkedListStack<>();
+
+        System.out.println("Commands: pushA <val>, popA, peekA, pushL <val>, popL, peekL, exit");
+
+        while (true) {
+            System.out.print("> ");
+            String cmd = sc.next();
+
+            if (cmd.equals("pushA")) arrayStack.push(sc.next());
+            else if (cmd.equals("popA")) System.out.println("ArrayStack popped: " + arrayStack.pop());
+            else if (cmd.equals("peekA")) System.out.println("ArrayStack top: " + arrayStack.peek());
+
+            else if (cmd.equals("pushL")) linkedStack.push(sc.next());
+            else if (cmd.equals("popL")) System.out.println("LinkedListStack popped: " + linkedStack.pop());
+            else if (cmd.equals("peekL")) System.out.println("LinkedListStack top: " + linkedStack.peek());
+
+            else if (cmd.equals("exit")) break;
+        }
+
+        sc.close();
+    }
+}
+

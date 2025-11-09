@@ -1,0 +1,77 @@
+package programs;
+import javax.swing.*;
+import java.awt.*;
+import java.util.Random;
+
+public class MultiThreadSwingApp extends JFrame {
+    private JLabel numberLabel;
+    private JLabel resultLabel;
+
+    public MultiThreadSwingApp() {
+        setTitle("Multi-Threaded Number Processor");
+        setSize(400, 200);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new GridLayout(2, 1));
+
+        numberLabel = new JLabel("Generated Number: ", SwingConstants.CENTER);
+        resultLabel = new JLabel("Result: ", SwingConstants.CENTER);
+
+        add(numberLabel);
+        add(resultLabel);
+
+        setVisible(true);
+
+        Thread generator = new Thread(new NumberGenerator());
+        generator.start();
+    }
+
+    class NumberGenerator implements Runnable {
+        public void run() {
+            Random rand = new Random();
+            while (true) {
+                int number = rand.nextInt(100); // 0 to 99
+                numberLabel.setText("Generated Number: " + number);
+
+                if (number % 2 == 0) {
+                    new Thread(new SquareCalculator(number)).start();
+                } else {
+                    new Thread(new CubeCalculator(number)).start();
+                }
+
+                try {
+                    Thread.sleep(1000); // 1 second delay
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class SquareCalculator implements Runnable {
+        int num;
+        SquareCalculator(int num) {
+            this.num = num;
+        }
+
+        public void run() {
+            int square = num * num;
+            resultLabel.setText("Even → Square: " + square);
+        }
+    }
+
+    class CubeCalculator implements Runnable {
+        int num;
+        CubeCalculator(int num) {
+            this.num = num;
+        }
+
+        public void run() {
+            int cube = num * num * num;
+            resultLabel.setText("Odd → Cube: " + cube);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new MultiThreadSwingApp());
+    }
+}

@@ -1,0 +1,32 @@
+import java.util.Scanner;
+
+class Calculator {
+    double a, b;
+
+    // Constructor Overloading
+    Calculator() {}
+    Calculator(double x) { a = x; }
+    Calculator(double x, double y) { a = x; b = y; }
+
+    // Method Overloading
+    double add() { return a + b; }
+    double add(double x) { return a + x; }
+    double add(double x, double y) { return x + y; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Using constructor with two inputs
+        double x = sc.nextDouble(), y = sc.nextDouble();
+        Calculator c = new Calculator(x, y);
+
+        // Outputs using different add methods
+        System.out.println("Add stored: " + c.add());
+        System.out.println("Add one input: " + c.add(sc.nextDouble()));
+        System.out.println("Add two inputs: " + c.add(sc.nextDouble(), sc.nextDouble()));
+
+        sc.close();
+    }
+}

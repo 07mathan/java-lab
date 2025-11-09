@@ -1,0 +1,23 @@
+import java.io.*;
+import java.util.*;
+
+public class PhoneDirectory {
+    public static void main(String[] args) throws IOException {
+        Hashtable<String, String> phoneBook = new Hashtable<>();
+        BufferedReader reader = new BufferedReader(new FileReader("phonebook.txt"));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(" ", 2);
+            if (parts.length == 2) {
+                phoneBook.put(parts[0], parts[1]);
+            }
+        }
+        reader.close();
+
+        // Display the phone directory
+        for (Map.Entry<String, String> entry : phoneBook.entrySet()) {
+            System.out.println(entry.getKey() + " -> " + entry.getValue());
+        }
+    }
+}

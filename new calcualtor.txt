@@ -1,0 +1,54 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class SimpleCalculator extends JFrame implements ActionListener {
+    JTextField display;
+    double num1 = 0, num2 = 0;
+    String op = "";
+
+    public SimpleCalculator() {
+        setTitle("Calculator");
+        setSize(300, 400);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        display = new JTextField();
+        add(display, BorderLayout.NORTH);
+
+        JPanel panel = new JPanel(new GridLayout(4, 4, 5, 5));
+        String[] buttons = {"7","8","9","+","4","5","6","-","1","2","3","*","0","%","=","C"};
+        for (String b : buttons) {
+            JButton btn = new JButton(b);
+            btn.addActionListener(this);
+            panel.add(btn);
+        }
+        add(panel, BorderLayout.CENTER);
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String s = e.getActionCommand();
+        try {
+            if (s.matches("[0-9]")) display.setText(display.getText() + s);
+            else if ("+-*%".contains(s)) { num1 = Double.parseDouble(display.getText()); op = s; display.setText(""); }
+            else if (s.equals("=")) {
+                num2 = Double.parseDouble(display.getText());
+                double res = switch (op) {
+                    case "+" -> num1 + num2;
+                    case "-" -> num1 - num2;
+                    case "*" -> num1 * num2;
+                    case "%" -> num2 == 0 ? Double.NaN : num1 / num2;
+                    default -> 0;
+                };
+                display.setText("" + res);
+            } else display.setText("");
+        } catch (Exception ex) {
+            display.setText("Error");
+        }
+    }
+
+    public static void main(String[] args) {
+        new SimpleCalculator();
+    }
+}

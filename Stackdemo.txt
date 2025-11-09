@@ -1,96 +1,102 @@
-package myfirst;
 import java.util.*;
 
-public class Stackdemo {
+// Stack ADT interface
+interface StackADT<T> {
+    void push(T item) throws Exception;
+    T pop() throws Exception;
+    T peek() throws Exception;
+    boolean isEmpty();
+}
 
-    interface Stack<T> {
-        void push(T item);
-        T pop();
-        T peek();
-        boolean isEmpty();
+// Implementation using Array
+class ArrayStack<T> implements StackADT<T> {
+    private Object[] stack;
+    private int top;
+    private int size;
+
+    public ArrayStack(int size) {
+        this.size = size;
+        stack = new Object[size];
+        top = -1;
     }
 
-    static class ArrayStack<T> implements Stack<T> {
-        T[] data;
-        int top = -1;
-
-        @SuppressWarnings("unchecked")
-        ArrayStack(int size) {
-            data = (T[]) new Object[size];
-        }
-
-        public void push(T item) {
-            if (top == data.length - 1) System.out.println("ArrayStack is full");
-            else data[++top] = item;
-        }
-
-        public T pop() {
-            return isEmpty() ? null : data[top--];
-        }
-
-        public T peek() {
-            return isEmpty() ? null : data[top];
-        }
-
-        public boolean isEmpty() {
-            return top == -1;
-        }
+    public void push(T item) throws Exception {
+        if (top == size - 1)
+            throw new Exception("Stack Overflow");
+        stack[++top] = item;
     }
 
-    static class LinkedListStack<T> implements Stack<T> {
-        static class Node<T> {
-            T data;
-            Node<T> next;
-            Node(T d) { data = d; }
-        }
-
-        Node<T> top;
-
-        public void push(T item) {
-            Node<T> node = new Node<>(item);
-            node.next = top;
-            top = node;
-        }
-
-        public T pop() {
-            if (isEmpty()) return null;
-            T val = top.data;
-            top = top.next;
-            return val;
-        }
-
-        public T peek() {
-            return isEmpty() ? null : top.data;
-        }
-
-        public boolean isEmpty() {
-            return top == null;
-        }
+    public T pop() throws Exception {
+        if (isEmpty())
+            throw new Exception("Stack Underflow");
+        return (T) stack[top--];
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        Stack<String> arrayStack = new ArrayStack<>(5);
-        Stack<String> linkedStack = new LinkedListStack<>();
+    public T peek() throws Exception {
+        if (isEmpty())
+            throw new Exception("Stack is empty");
+        return (T) stack[top];
+    }
 
-        System.out.println("Commands: pushA <val>, popA, peekA, pushL <val>, popL, peekL, exit");
-
-        while (true) {
-            System.out.print("> ");
-            String cmd = sc.next();
-
-            if (cmd.equals("pushA")) arrayStack.push(sc.next());
-            else if (cmd.equals("popA")) System.out.println("ArrayStack popped: " + arrayStack.pop());
-            else if (cmd.equals("peekA")) System.out.println("ArrayStack top: " + arrayStack.peek());
-
-            else if (cmd.equals("pushL")) linkedStack.push(sc.next());
-            else if (cmd.equals("popL")) System.out.println("LinkedListStack popped: " + linkedStack.pop());
-            else if (cmd.equals("peekL")) System.out.println("LinkedListStack top: " + linkedStack.peek());
-
-            else if (cmd.equals("exit")) break;
-        }
-
-        sc.close();
+    public boolean isEmpty() {
+        return top == -1;
     }
 }
 
+// Implementation using Linked List
+class LinkedListStack<T> implements StackADT<T> {
+    private class Node {
+        T data;
+        Node next;
+        Node(T data) { this.data = data; }
+    }
+
+    private Node top;
+
+    public void push(T item) {
+        Node newNode = new Node(item);
+        newNode.next = top;
+        top = newNode;
+    }
+
+    public T pop() throws Exception {
+        if (isEmpty())
+            throw new Exception("Stack Underflow");
+        T value = top.data;
+        top = top.next;
+        return value;
+    }
+
+    public T peek() throws Exception {
+        if (isEmpty())
+            throw new Exception("Stack is empty");
+        return top.data;
+    }
+
+    public boolean isEmpty() {
+        return top == null;
+    }
+}
+
+// Test class
+public class StackInterfaceDemo {
+    public static void main(String[] args) {
+        try {
+            // Test Array-based stack
+            StackADT<Integer> arrayStack = new ArrayStack<>(3);
+            arrayStack.push(10);
+            arrayStack.push(20);
+            arrayStack.push(30);
+            System.out.println("ArrayStack Pop: " + arrayStack.pop());
+
+            // Test Linked-list-based stack
+            StackADT<String> linkedStack = new LinkedListStack<>();
+            linkedStack.push("A");
+            linkedStack.push("B");
+            linkedStack.push("C");
+            System.out.println("LinkedListStack Pop: " + linkedStack.pop());
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}
